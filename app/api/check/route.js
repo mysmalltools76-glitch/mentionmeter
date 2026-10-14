@@ -6,7 +6,7 @@ import { QUESTION_COUNT, DAILY_LIMIT_EMAIL, DAILY_LIMIT_IP } from "@/lib/config"
 import { analyzeAnswer, overallScore, competitorTally, cleanAnswer, brandTerms, isSameBrand } from "@/lib/analyze";
 
 export const runtime = "nodejs";
-export const maxDuration = 60; // Vercel par function ko 60 second tak chalne do
+export const maxDuration = 300; // Vercel par function ko 300 second tak chalne do
 
 const EMAIL_RE = /^[^\s@,()<>]+@[^\s@,()<>]+\.[^\s@,()<>]{2,}$/;
 const clip = (s, n) => String(s ?? "").trim().slice(0, n);
@@ -82,7 +82,7 @@ Return only a JSON array of ${QUESTION_COUNT} strings.`,
 
     // ---- 2. Har sawal Gemini se poocho (bilkul customer ki tarah) ----
     const grounding = process.env.USE_GROUNDING === "true";
-    const rawAnswers = await mapLimit(questions, 3, (q) => gemini(q, { grounding, temperature: 0.7 }));
+    const rawAnswers = await mapLimit(questions, 4, (q) => gemini(q, { grounding, temperature: 0.7 }));
     const answers = rawAnswers.map(cleanAnswer);
 
     // ---- 3. Jawabon mein se brands nikaalo + suggestions ----
